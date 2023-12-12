@@ -1,14 +1,11 @@
 import os
 from typing import List
 
-from langchain.chat_models import AzureChatOpenAI
-from langchain.llms import AzureOpenAI
-from langchain.prompts import ChatPromptTemplate
-from langchain_core.messages import HumanMessage, BaseMessage, SystemMessage, AIMessage
+
+from langchain_core.messages import BaseMessage
 
 api_key = os.environ['OPENAI_API_KEY']
 base_url = os.environ['OPENAI_API_BASE']
-deployment = os.environ['DEPLOYMENT_NAME']
 version = os.environ['OPENAI_API_VERSION']
 model = "gpt-35-turbo"
 
@@ -18,7 +15,7 @@ model = "gpt-35-turbo"
 # ------------------------------------------------------------------------------
 
 
-def send_single_human_message(message) -> AIMessage:
+def send_single_human_message(message) -> BaseMessage:
     """
     TODO: Implement this method to create a new AzureChatOpenAI object and invoke the chat object with a List
             containing a single HumanMessage.
@@ -33,16 +30,16 @@ def send_single_human_message(message) -> AIMessage:
     - Create a new AzureChatOpenAI object with the deployment and model variable provided above.
     - Create a new HumanMessage object with the message variable provided above.
     - Send the HumanMessage object to the AzureChatOpenAI object.
-    - Return the response from the AzureChatOpenAI object.
+    - Return the response from the AzureChatOpenAI object invoke method.
 
     End TODO
     """
 
+    # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
 
 
-def send_human_message_prompt_template(style, message) -> AIMessage:
-
+def send_human_message_prompt_template(style, message) -> BaseMessage:
     """
     TODO: Create a HumanPromptTemplate object from the prompt file, sending the HumanMesasge to the AzureChatOpenAI object
             with the HumanPromptTemplate object's formatted messages.
@@ -56,20 +53,23 @@ def send_human_message_prompt_template(style, message) -> AIMessage:
     Instructions:
     - Create a new AzureChatOpenAI object with the deployment and model variable provided above.
     - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Send the formatted messages from HumanMessagePromptTemplate object to the AzureChatOpenAI object.
+    - Send the formatted messages from HumanMessagePromptTemplate object to through the invoke method of the AzureChatOpenAI object.
+    - Return the response from the AzureChatOpenAI object.
     
     End TODO
     """
 
+    # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
 
 
-def send_multi_message_prompt_template(style, message) -> AIMessage:
-    prompt_file = open("../templates/CS_system_prompt.txt")
+def send_multi_message_prompt_template(style, message) -> BaseMessage:
+    # System message prompt template
+    prompt_file = open("../../templates/system_prompt.txt")
 
     """
     TODO: Create a PromptTemplate object using both a HumanMessagePromptTemplate and a SystemMessagePromptTemplate object 
-            using the 'CS_system_prompt.txt' from the templates directory.
+            using the 'system_prompt.txt' from the templates directory.
     
     :param: 
     style: Takes in user input about what style they AI to respond in. (e.g. cheerful, formal, pirate, etc.)
@@ -81,48 +81,58 @@ def send_multi_message_prompt_template(style, message) -> AIMessage:
     Instructions:
     - Create a new AzureChatOpenAI object with the deployment and model variable provided above.
     - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Create a new SystemMessagePromptTemplate object with the style variable provided above.
-    - Create a new PromptTemplate object with the HumanMessagePromptTemplate and SystemMessagePromptTemplate objects.
-    - Send the formatted messages from PromptTemplate object to the AzureChatOpenAI object.
+    - Create a new SystemMessagePromptTemplate object with the prompt_file variable provided above.
+    - Create a new ChatPromptTemplate object with the HumanMessagePromptTemplate and SystemMessagePromptTemplate objects.
+    - Send the formatted messages from PromptTemplate object to the AzureChatOpenAI object via the invoke method, returning 
+        the Message from the AI.
     
     End TODO
     """
 
+    # Keep this line here to close the file
     prompt_file.close()
+
+    # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
 
 
-def send_prompt_with_chat_memory(style, message) -> AIMessage:
-    prompt_file = open("../templates/CS_system_prompt.txt")
+def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
+    system_ai_template = f"An AI that is here to help any human to answer any questions. Talks in a {style} tone."
+    message2 = "What can birds do?"
+    message3 = "How many messages have we exchanged? About what?"
 
     """
-        TODO: Create a method that utilizes a PromptTemplate object using both a HumanMessagePromptTemplate and a 
-                SystemMessagePromptTemplate object using the 'CS_system_prompt.txt' from the templates directory. This 
-                method will also use the ConversationBufferMemory object to store the conversation history and send it to
-                the LLM.
-                
+    TODO: The send_prompt_with_chat_memory function is designed to facilitate a conversation with the Language 
+    Learning Model (LLM). It creates an AzureChatOpenAI object and a ChatPromptTemplate object, which includes a 
+    SystemMessagePromptTemplate, a MessagesPlaceholder for history, and a HumanMessagePromptTemplate. The function 
+    also initializes a ConversationBufferMemory object to store the conversation history. It then creates a 
+    ConversationChain object and sends messages through the run method. Finally, it returns the conversation 
+    history.
 
-        :param: 
-        style: Takes in user input about what style they AI to respond in. (e.g. cheerful, formal, pirate, etc.)
+    :param: 
+    style: Takes in user input about what style they AI to respond in. (e.g. cheerful, formal, pirate, etc.)
         message: Takes in user input about what they want to ask the LLM.
 
-        :returns: 
-        AIMessage object containing the LLM's response.
+    :returns: 
+    AIMessage object containing the LLM's response.
 
-        Instructions:
+    Instructions:
         - Create a new AzureChatOpenAI object with the deployment and model variable provided above.
-        - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-        - Create a new SystemMessagePromptTemplate object with the style variable provided above.
+        - Create a new ChatPromptTemplate object using the from_messages method with a List contain a SystemMessagePromptTemplate object,
+            a MessagesPlaceholder object with the 'history' value, and a HumanMessagePromptTemplate object.
         - Create a new ConversationBufferMemory object.
-        - Create a new PromptTemplate object with the HumanMessagePromptTemplate, SystemMessagePromptTemplate, and 
-            ConversationBufferMemory objects.
-        - Send the formatted messages from PromptTemplate object to the AzureChatOpenAI object.
+        - Create a new ConversationChain object with the AzureChatOpenAI object for the 'llm' value, the ChatPromptTemplate
+            object for the 'prompt' value, and the ConversationBufferMemory object for the 'memory' value in the chain.
+        - Using the ConversationChain object, send each message through the predict method. Inputting each message object:
+            message, message2 and message3.
+        - Return the contents of the 'history' by using ConversationBufferMemory object's load_memory_variables method.
 
-        End TODO
-        """
+    End TODO
+    """
 
-    prompt_file.close()
+    # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
+
 
 # ------------------------------------------------------------------------------
 # Starter Code - TOUCH AT YOUR OWN RISK!
@@ -142,7 +152,7 @@ def main():
     print("#############################Submitting request to Azure Chat OpenAI#####################################")
     print("#########################################################################################################")
 
-    send_single_human_message(message)
+    print(send_single_human_message(message))
     print("#########################################################################################################")
     print("#####################################Single human message completed.#####################################")
     print("#########################################################################################################")
