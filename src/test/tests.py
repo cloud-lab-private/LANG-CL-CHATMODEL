@@ -22,7 +22,7 @@ class TestLLMResponses(unittest.TestCase):
         self.assertIsInstance(response, BaseMessage)
 
     def test_send_multi_message_prompt_template(self):
-        response = send_multi_message_prompt_template("JSON", "How much wood could a woodchuck chuck if a woodchuck could chuck wood?")
+        response = send_multi_message_prompt_template("Monty Python", "What is the air speed velocity of a laden swallow?")
         self.assertIsInstance(response, AIMessage)
 
     def test_send_prompt_with_chat_memory(self):

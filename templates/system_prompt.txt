@@ -1,6 +1,14 @@
-You're a cheerful, overwhelmingly positive AI.
-You have a lot of love to give, and you're always spreading joy, responding
- in a style that is {style} to the message delimited by triple backticks.
+Perform the following actions:
+1 - Answer the following message delimited by triple backticks. \
+2 - Summarize the answer into a single sentence \
+2 - Translate the summary into {style}. \
+3 - List each source about the message. \
+4 - Output a json object that contains the following fields: \
+    a. summary \
+    b. translation \
+    c. sources \
 
-message:
+Separate each action with a line of dashes. \
+
+message
 ```{message}```

@@ -1,7 +1,6 @@
 import os
 from typing import List
 
-
 from langchain_core.messages import BaseMessage
 
 api_key = os.environ['OPENAI_API_KEY']
@@ -9,11 +8,9 @@ base_url = os.environ['OPENAI_API_BASE']
 version = os.environ['OPENAI_API_VERSION']
 model = "gpt-35-turbo"
 
-
 # ------------------------------------------------------------------------------
 # TODO Functions - Implement the logic as per instructions
 # ------------------------------------------------------------------------------
-
 
 def send_single_human_message(message) -> BaseMessage:
     """
@@ -34,6 +31,7 @@ def send_single_human_message(message) -> BaseMessage:
 
     End TODO
     """
+    # Write Code Below
 
     # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
@@ -58,6 +56,7 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
     
     End TODO
     """
+    # Write Code Below
 
     # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
@@ -65,7 +64,9 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
 
 def send_multi_message_prompt_template(style, message) -> BaseMessage:
     # System message prompt template
-    prompt_file = open("../../templates/system_prompt.txt")
+    file = open("../../templates/system_prompt.txt")
+    prompt_file = file.read()
+    file.close()
 
     """
     TODO: Create a PromptTemplate object using both a HumanMessagePromptTemplate and a SystemMessagePromptTemplate object 
@@ -88,9 +89,7 @@ def send_multi_message_prompt_template(style, message) -> BaseMessage:
     
     End TODO
     """
-
-    # Keep this line here to close the file
-    prompt_file.close()
+    # Write Code Below
 
     # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
@@ -129,55 +128,8 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
 
     End TODO
     """
+    # Write Code Below
 
     # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
 
-
-# ------------------------------------------------------------------------------
-# Starter Code - TOUCH AT YOUR OWN RISK!
-# ------------------------------------------------------------------------------
-
-def user_input():
-    user_input_style = input("Style: ")
-    user_input_message = input("Message: ")
-
-    return [user_input_style, user_input_message]
-
-
-def main():
-    style, message = user_input()
-    print(style, message)
-
-    print("#############################Submitting request to Azure Chat OpenAI#####################################")
-    print("#########################################################################################################")
-
-    print(send_single_human_message(message))
-    print("#########################################################################################################")
-    print("#####################################Single human message completed.#####################################")
-    print("#########################################################################################################")
-    print()
-
-    send_human_message_prompt_template(style, message)
-    print("#########################################################################################################")
-    print("#####################################Human message prompt template completed.############################")
-    print("#########################################################################################################")
-    print()
-
-    send_multi_message_prompt_template(style, message)
-    print("#########################################################################################################")
-    print("#####################################Multi message prompt template completed.############################")
-    print("#########################################################################################################")
-    print()
-
-    send_prompt_with_chat_memory(style, message)
-    print("#########################################################################################################")
-    print("#####################################Prompt with chat memory completed.###################################")
-    print()
-
-    print("#########################################################################################################")
-    print("############################# END OF REQUEST to Azure Chat OpenAI#####################################")
-
-
-if __name__ == "__main__":
-    main()
