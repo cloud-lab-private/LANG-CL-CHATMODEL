@@ -12,6 +12,7 @@ model = "gpt-35-turbo"
 # TODO Functions - Implement the logic as per instructions
 # ------------------------------------------------------------------------------
 
+
 def send_single_human_message(message) -> BaseMessage:
     """
     TODO: Implement this method to create a new AzureChatOpenAI object and invoke the chat object with a List
@@ -132,4 +133,3 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
 
     # Replace with return statement
     raise NotImplementedError("This function has not been implemented yet.")
-

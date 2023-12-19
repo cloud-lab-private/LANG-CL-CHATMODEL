@@ -12,7 +12,6 @@ in user input from the console and send it to the LLM, printing the response to 
 as it will not affect the test results. Strictly used for manual testing of your code.
 """
 
-
 def user_input():
     user_input_style = input("Style: ")
     user_input_message = input("Message: ")
