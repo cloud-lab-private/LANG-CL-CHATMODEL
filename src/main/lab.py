@@ -1,12 +1,22 @@
 import os
 from typing import List
 
-from langchain_core.messages import BaseMessage
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
+from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
+from langchain_community.chat_models.huggingface import ChatHuggingFace
+from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.prompts import HumanMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate, \
+    MessagesPlaceholder
 
-api_key = os.environ['OPENAI_API_KEY']
-base_url = os.environ['OPENAI_API_BASE']
-version = os.environ['OPENAI_API_VERSION']
-model = "gpt-35-turbo"
+llm = HuggingFaceEndpoint(
+    endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
+    huggingfacehub_api_token="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",
+    task="text2text-generation",
+    model_kwargs={
+        "max_new_tokens": 200
+    }
+)
 
 # ------------------------------------------------------------------------------
 # TODO Functions - Implement the logic as per instructions
@@ -33,9 +43,12 @@ def send_single_human_message(message) -> BaseMessage:
     End TODO
     """
     # Write Code Below
+    chat_model = ChatHuggingFace(llm=llm)
+    response = chat_model.invoke([HumanMessage(content=message)])
+    return response
 
     # Replace with return statement
-    raise NotImplementedError("This function has not been implemented yet.")
+    # raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_human_message_prompt_template(style, message) -> BaseMessage:
@@ -58,9 +71,12 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
     End TODO
     """
     # Write Code Below
-
+    chat_model = ChatHuggingFace(llm=llm)
+    human_message = HumanMessagePromptTemplate.from_template(message)
+    response = chat_model.invoke([human_message.format()])
+    return response
     # Replace with return statement
-    raise NotImplementedError("This function has not been implemented yet.")
+    # raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_multi_message_prompt_template(style, message) -> BaseMessage:
@@ -91,9 +107,15 @@ def send_multi_message_prompt_template(style, message) -> BaseMessage:
     End TODO
     """
     # Write Code Below
+    chat_model = ChatHuggingFace(llm=llm)
+    human_message = HumanMessagePromptTemplate.from_template(message)
+    system_message = SystemMessagePromptTemplate.from_template(prompt_file)
+    chat_prompt = ChatPromptTemplate.from_messages([human_message, system_message])
+    response = chat_model.invoke(chat_prompt.format())
+    return response
 
     # Replace with return statement
-    raise NotImplementedError("This function has not been implemented yet.")
+    # raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
@@ -131,6 +153,14 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
     End TODO
     """
     # Write Code Below
+    chat_model = ChatHuggingFace(llm=llm)
+    chat_prompt = ChatPromptTemplate.from_messages(
+        [SystemMessagePromptTemplate.from_template(system_ai_template), MessagesPlaceholder("history"),
+         HumanMessagePromptTemplate.from_template(message)])
+    conversation_buffer = ConversationBufferMemory()
+    conversation_chain = ConversationChain(llm=chat_model, prompt=chat_prompt, memory=conversation_buffer)
+    conversation_chain.predict([message, message2, message3])
+    return conversation_buffer.load_memory_variables()['history']
 
     # Replace with return statement
-    raise NotImplementedError("This function has not been implemented yet.")
+    # raise NotImplementedError("This function has not been implemented yet.")
