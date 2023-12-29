@@ -21,17 +21,6 @@ class TestLLMResponses(unittest.TestCase):
             if 'Bad Gateway' in str(e):
                 llm_wakeup()
 
-    def test_chat_model(self):
-        llm = HuggingFaceEndpoint(
-            endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
-            task="text2text-generation",
-            model_kwargs={
-                "max_new_tokens": 200
-            }
-        )
-        chat_model = ChatHuggingFace(llm=llm)
-        print(chat_model.invoke([HumanMessage(content="Hello, how are you?")]))
-
     def test_send_single_human_message(self):
         response = send_single_human_message("Hello, how are you?")
         self.assertIsInstance(response, BaseMessage)
