@@ -1,13 +1,9 @@
 import os
 from typing import List
 
-from langchain.chains import ConversationChain
-from langchain.memory import ConversationBufferMemory
 from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
 from langchain_community.chat_models.huggingface import ChatHuggingFace
-from langchain_core.messages import BaseMessage, HumanMessage
-from langchain_core.prompts import HumanMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate, \
-    MessagesPlaceholder
+from langchain_core.messages import BaseMessage
 
 llm = HuggingFaceEndpoint(
     endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
@@ -18,6 +14,7 @@ llm = HuggingFaceEndpoint(
     }
 )
 
+chat_model = ChatHuggingFace(llm=llm)
 # ------------------------------------------------------------------------------
 # TODO Functions - Implement the logic as per instructions
 # ------------------------------------------------------------------------------
@@ -35,20 +32,15 @@ def send_single_human_message(message) -> BaseMessage:
     AIMessage object containing the LLM's response.
 
     Instructions:
-    - Create a new AzureChatOpenAI object with the model variable provided above.
-    - Create a new HumanMessage object with the message variable provided above.
-    - Send the HumanMessage object to the AzureChatOpenAI object.
-    - Return the response from the AzureChatOpenAI object invoke method.
-
+    - Create a new HumanMessage object with the message variable provided via the arguments to this function.
+    - Use the HumanMessage object to pass as an argument to ChatHuggingFace object's invoke() method.
+    - Return the response from the invoke method.
     End TODO
     """
     # Write Code Below
-    chat_model = ChatHuggingFace(llm=llm)
-    response = chat_model.invoke([HumanMessage(content=message)])
-    return response
 
     # Replace with return statement
-    # raise NotImplementedError("This function has not been implemented yet.")
+    raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_human_message_prompt_template(style, message) -> BaseMessage:
@@ -63,20 +55,18 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
     AIMessage object containing the LLM's response.
     
     Instructions:
-    - Create a new AzureChatOpenAI object with the model variable provided above.
-    - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Send the formatted messages from HumanMessagePromptTemplate object to through the invoke method of the AzureChatOpenAI object.
-    - Return the response from the AzureChatOpenAI object.
+    - Create a new HumanMessagePromptTemplate object and use the from_template method with the message variable passed
+        as an argument.
+    - Use the new HumanMessagePromptTemplate object's .format() method to be passed as an argument through the invoke
+        method of the chat_model.
+    - Return the response from the chat_model.
     
     End TODO
     """
     # Write Code Below
-    chat_model = ChatHuggingFace(llm=llm)
-    human_message = HumanMessagePromptTemplate.from_template(message)
-    response = chat_model.invoke([human_message.format()])
-    return response
+
     # Replace with return statement
-    # raise NotImplementedError("This function has not been implemented yet.")
+    raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_multi_message_prompt_template(style, message) -> BaseMessage:
@@ -97,25 +87,22 @@ def send_multi_message_prompt_template(style, message) -> BaseMessage:
     AIMessage object containing the LLM's response.
     
     Instructions:
-    - Create a new AzureChatOpenAI object with model variable provided above.
-    - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Create a new SystemMessagePromptTemplate object with the prompt_file variable provided above.
-    - Create a new ChatPromptTemplate object with the HumanMessagePromptTemplate and SystemMessagePromptTemplate objects.
-    - Send the formatted messages from PromptTemplate object to the AzureChatOpenAI object via the invoke method, returning 
-        the Message from the AI.
+    - Create a new HumanMessagePromptTemplate object and use the from_template method with the message variable passed 
+        as an argument.
+    - Create a new SystemMessagePromptTemplate object and use the from_template method with the prompt_file variable passed 
+        as an argument.
+    - Create a new ChatPromptTemplate object using the from_messages with a List containing the HumanMessagePromptTemplate 
+        and SystemMessagePromptTemplate objects.
+    - Send the formatted messages from PromptTemplate object to the chat_model via the invoke method, including 
+        the style=style and message=message. 
+    - Return the response from the chat_model.
     
     End TODO
     """
     # Write Code Below
-    chat_model = ChatHuggingFace(llm=llm)
-    human_message = HumanMessagePromptTemplate.from_template(message)
-    system_message = SystemMessagePromptTemplate.from_template(prompt_file)
-    chat_prompt = ChatPromptTemplate.from_messages([human_message, system_message])
-    response = chat_model.invoke(chat_prompt.format())
-    return response
 
     # Replace with return statement
-    # raise NotImplementedError("This function has not been implemented yet.")
+    raise NotImplementedError("This function has not been implemented yet.")
 
 
 def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
@@ -139,9 +126,6 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
     AIMessage object containing the LLM's response.
 
     Instructions:
-        - Create a new AzureChatOpenAI object with the model variable provided above.
-        - Create a new ChatPromptTemplate object using the from_messages method with a List contain a SystemMessagePromptTemplate object,
-            a MessagesPlaceholder object with the 'history' value, and a HumanMessagePromptTemplate object.
         - Create a new ConversationBufferMemory object.
         - Create a new ConversationChain object with the AzureChatOpenAI object for the 'llm' value, the ChatPromptTemplate
             object for the 'prompt' value, and the ConversationBufferMemory object for the 'memory' value in the chain.
@@ -153,14 +137,6 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
     End TODO
     """
     # Write Code Below
-    chat_model = ChatHuggingFace(llm=llm)
-    chat_prompt = ChatPromptTemplate.from_messages(
-        [SystemMessagePromptTemplate.from_template(system_ai_template), MessagesPlaceholder("history"),
-         HumanMessagePromptTemplate.from_template(message)])
-    conversation_buffer = ConversationBufferMemory()
-    conversation_chain = ConversationChain(llm=chat_model, prompt=chat_prompt, memory=conversation_buffer)
-    conversation_chain.predict([message, message2, message3])
-    return conversation_buffer.load_memory_variables()['history']
 
     # Replace with return statement
-    # raise NotImplementedError("This function has not been implemented yet.")
+    raise NotImplementedError("This function has not been implemented yet.")
