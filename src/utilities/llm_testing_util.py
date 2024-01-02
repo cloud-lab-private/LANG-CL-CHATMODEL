@@ -2,9 +2,9 @@ import os
 import requests
 from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
 
-token = os.environ.get("HF_TOKEN")
-API_URL = "https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud"
-headers = {"Authorization": "Bearer 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"}
+token = os.environ['HF_TOKEN']
+API_URL = os.environ['LLM_ENDPOINT']
+headers = {"Authorization": f"Bearer {token}"}
 textInput = """
 <|system|>
 You are a pirate chatbot who always responds with Arr!</s>
@@ -26,7 +26,7 @@ def llm_wakeup():
 
 def llm_connection_check():
     llm = HuggingFaceEndpoint(
-        endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
+        endpoint_url=API_URL,
         task="text2text-generation",
         model_kwargs={
             "max_new_tokens": 200

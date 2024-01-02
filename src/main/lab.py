@@ -6,8 +6,7 @@ from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain_core.messages import BaseMessage
 
 llm = HuggingFaceEndpoint(
-    endpoint_url="https://z8dvl7fzhxxcybd8.eu-west-1.aws.endpoints.huggingface.cloud",
-    huggingfacehub_api_token="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",
+    endpoint_url=os.environ['LLM_ENDPOINT'],
     task="text2text-generation",
     model_kwargs={
         "max_new_tokens": 200
