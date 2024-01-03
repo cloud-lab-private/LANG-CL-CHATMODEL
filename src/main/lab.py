@@ -20,9 +20,8 @@ chat_model = ChatHuggingFace(llm=llm)
 
 
 def send_single_human_message(message) -> BaseMessage:
-    """
-    TODO: Implement this method to create a new AzureChatOpenAI object and invoke the chat object with a List
-            containing a single HumanMessage.
+    f"""
+    TODO: Implement this method to use the ChatHuggingFace object(chat_model)  to invoke with a List containing a single HumanMessage.
 
     :param:
     message: Takes in user input about what they want to ask the LLM.
@@ -44,7 +43,7 @@ def send_single_human_message(message) -> BaseMessage:
 
 def send_human_message_prompt_template(style, message) -> BaseMessage:
     """
-    TODO: Create a HumanPromptTemplate object from the prompt file, sending the HumanMesasge to the AzureChatOpenAI object
+    TODO: Create a HumanPromptTemplate object from the prompt file, sending the HumanMesasge to the ChatHuggingFace object
             with the HumanPromptTemplate object's formatted messages.
     :param: 
     style: Takes in user input about what style they AI to respond in. (e.g. cheerful, formal, pirate, etc.)
@@ -111,7 +110,7 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
 
     """
     TODO: The send_prompt_with_chat_memory function is designed to facilitate a conversation with the Language 
-    Learning Model (LLM). It creates an AzureChatOpenAI object and a ChatPromptTemplate object, which includes a 
+    Learning Model (LLM). Using the ChatHuggingFace object and a ChatPromptTemplate object, which includes a 
     SystemMessagePromptTemplate, a MessagesPlaceholder for history, and a HumanMessagePromptTemplate. The function 
     also initializes a ConversationBufferMemory object to store the conversation history. It then creates a 
     ConversationChain object and sends messages through the run method. Finally, it returns the conversation 
@@ -126,12 +125,12 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
 
     Instructions:
         - Create a new ConversationBufferMemory object.
-        - Create a new ConversationChain object with the AzureChatOpenAI object for the 'llm' value, the ChatPromptTemplate
-            object for the 'prompt' value, and the ConversationBufferMemory object for the 'memory' value in the chain.
-        - Using the ConversationChain object, send each message through the predict method. Inputting each message object:
+        - Create a new ConversationChain object with the ChatHuggingFace object(chat_model) for the 'llm' value and
+            the ConversationBufferMemory object for the 'memory' value in the chain.
+        - Using the ConversationChain object, send each message through the predict method 3x. Inputting each message object:
             message, message2 and message3.
-        - By using ConversationBufferMemory object's load_memory_variables method, we return an dictionary that contains
-            a key for 'history'. Extract & Return the value for the 'history' key, which is our List[BaseMessage] object.
+        - By using ConversationBufferMemory object's buffer_as_messages variable you can return a list of all messages 
+            that transpired within the conversation.
 
     End TODO
     """
