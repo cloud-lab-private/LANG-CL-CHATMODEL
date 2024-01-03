@@ -1,13 +1,19 @@
 import os
 from typing import List
 
+from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
+from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain_core.messages import BaseMessage
 
-api_key = os.environ['OPENAI_API_KEY']
-base_url = os.environ['OPENAI_API_BASE']
-version = os.environ['OPENAI_API_VERSION']
-model = "gpt-35-turbo"
+llm = HuggingFaceEndpoint(
+    endpoint_url=os.environ['LLM_ENDPOINT'],
+    task="text2text-generation",
+    model_kwargs={
+        "max_new_tokens": 200
+    }
+)
 
+chat_model = ChatHuggingFace(llm=llm)
 # ------------------------------------------------------------------------------
 # TODO Functions - Implement the logic as per instructions
 # ------------------------------------------------------------------------------
@@ -25,11 +31,9 @@ def send_single_human_message(message) -> BaseMessage:
     AIMessage object containing the LLM's response.
 
     Instructions:
-    - Create a new AzureChatOpenAI object with the model variable provided above.
-    - Create a new HumanMessage object with the message variable provided above.
-    - Send the HumanMessage object to the AzureChatOpenAI object.
-    - Return the response from the AzureChatOpenAI object invoke method.
-
+    - Create a new HumanMessage object with the message variable provided via the arguments to this function.
+    - Use the HumanMessage object to pass as an argument to ChatHuggingFace object's invoke() method.
+    - Return the response from the invoke method.
     End TODO
     """
     # Write Code Below
@@ -50,10 +54,11 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
     AIMessage object containing the LLM's response.
     
     Instructions:
-    - Create a new AzureChatOpenAI object with the model variable provided above.
-    - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Send the formatted messages from HumanMessagePromptTemplate object to through the invoke method of the AzureChatOpenAI object.
-    - Return the response from the AzureChatOpenAI object.
+    - Create a new HumanMessagePromptTemplate object and use the from_template method with the message variable passed
+        as an argument.
+    - Use the new HumanMessagePromptTemplate object's .format() method to be passed as an argument through the invoke
+        method of the chat_model.
+    - Return the response from the chat_model.
     
     End TODO
     """
@@ -81,12 +86,15 @@ def send_multi_message_prompt_template(style, message) -> BaseMessage:
     AIMessage object containing the LLM's response.
     
     Instructions:
-    - Create a new AzureChatOpenAI object with model variable provided above.
-    - Create a new HumanMessagePromptTemplate object with the message variable provided above.
-    - Create a new SystemMessagePromptTemplate object with the prompt_file variable provided above.
-    - Create a new ChatPromptTemplate object with the HumanMessagePromptTemplate and SystemMessagePromptTemplate objects.
-    - Send the formatted messages from PromptTemplate object to the AzureChatOpenAI object via the invoke method, returning 
-        the Message from the AI.
+    - Create a new HumanMessagePromptTemplate object and use the from_template method with the message variable passed 
+        as an argument.
+    - Create a new SystemMessagePromptTemplate object and use the from_template method with the prompt_file variable passed 
+        as an argument.
+    - Create a new ChatPromptTemplate object using the from_messages with a List containing the HumanMessagePromptTemplate 
+        and SystemMessagePromptTemplate objects.
+    - Send the formatted messages from PromptTemplate object to the chat_model via the invoke method, including 
+        the style=style and message=message. 
+    - Return the response from the chat_model.
     
     End TODO
     """
@@ -117,9 +125,6 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
     AIMessage object containing the LLM's response.
 
     Instructions:
-        - Create a new AzureChatOpenAI object with the model variable provided above.
-        - Create a new ChatPromptTemplate object using the from_messages method with a List contain a SystemMessagePromptTemplate object,
-            a MessagesPlaceholder object with the 'history' value, and a HumanMessagePromptTemplate object.
         - Create a new ConversationBufferMemory object.
         - Create a new ConversationChain object with the AzureChatOpenAI object for the 'llm' value, the ChatPromptTemplate
             object for the 'prompt' value, and the ConversationBufferMemory object for the 'memory' value in the chain.

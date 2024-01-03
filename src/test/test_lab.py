@@ -1,17 +1,32 @@
 import unittest
 from typing import List
-
-from langchain.chat_models import AzureChatOpenAI
 from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.outputs import LLMResult
 
 from src.main.lab import send_single_human_message, send_human_message_prompt_template, send_multi_message_prompt_template, \
     send_prompt_with_chat_memory
+from src.utilities.llm_testing_util import llm_connection_check, llm_wakeup
 
 
 class TestLLMResponses(unittest.TestCase):
-    def test_llm_connection(self):
-        llm = AzureChatOpenAI(model_name="gpt-35-turbo")
-        self.assertIsInstance(llm, AzureChatOpenAI)
+    """
+        This function is a sanity check for the Language Learning Model (LLM) connection.
+        It attempts to generate a response from the LLM. If a 'Bad Gateway' error is encountered,
+        it initiates the LLM wake-up process. This function is critical for ensuring the LLM is
+        operational before running tests and should not be modified without understanding the
+        implications.
+        Raises:
+            Exception: If any error other than 'Bad Gateway' is encountered, it is raised to the caller.
+        """
+
+    def test_llm_sanity_check(self):
+        try:
+            response = llm_connection_check()
+            self.assertIsInstance(response, LLMResult)
+        except Exception as e:
+            if 'Bad Gateway' in str(e):
+                llm_wakeup()
+                self.fail("LLM is not awake. Please try again in 3-5 minutes.")
 
     def test_send_single_human_message(self):
         response = send_single_human_message("Hello, how are you?")
