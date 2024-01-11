@@ -33,7 +33,7 @@ class TestLLMResponses(unittest.TestCase):
         self.assertIsInstance(response, BaseMessage)
 
     def test_send_human_message_prompt_template(self):
-        response = send_human_message_prompt_template("goofy", "Hello, how are you?")
+        response = send_human_message_prompt_template("Hello, how are you?")
         self.assertIsInstance(response, BaseMessage)
 
     def test_send_multi_message_prompt_template(self):

@@ -44,7 +44,7 @@ def send_single_human_message(message) -> BaseMessage:
     raise NotImplementedError("This function has not been implemented yet.")
 
 
-def send_human_message_prompt_template(style, message) -> BaseMessage:
+def send_human_message_prompt_template(message) -> BaseMessage:
     """
     TODO: Create a HumanPromptTemplate object from the prompt file, sending the HumanMesasge to the ChatHuggingFace object
             with the HumanPromptTemplate object's formatted messages.
@@ -59,7 +59,7 @@ def send_human_message_prompt_template(style, message) -> BaseMessage:
     - Create a new HumanMessagePromptTemplate object and use the from_template method with the message variable passed
         as an argument.
     - Use the new HumanMessagePromptTemplate object's .format_messages() method to be passed as an argument through the invoke
-        method of the chat_model including the style=style and message=message as arguments.
+        method of the chat_model..
     - Return the response from the chat_model.
     
     End TODO
@@ -92,8 +92,8 @@ def send_multi_message_prompt_template(style, message) -> BaseMessage:
         as an argument.
     - Create a new SystemMessagePromptTemplate object and use the from_template method with the prompt_file variable passed 
         as an argument.
-    - Create a new ChatPromptTemplate object using the from_messages with a List containing the HumanMessagePromptTemplate 
-        and SystemMessagePromptTemplate objects.
+    - Create a new ChatPromptTemplate object using the from_messages with a List containing the SystemMessagePromptTemplate  
+        and HumanMessagePromptTemplate objects. NOTE: HumanMessage must be last in the list.
     - Send the formatted messages from PromptTemplate object to the chat_model via the invoke method, including 
         the style=style and message=message. 
     - Return the response from the chat_model.
@@ -130,8 +130,8 @@ def send_prompt_with_chat_memory(style, message) -> List[BaseMessage]:
         - Create a new ConversationBufferMemory object.
         - Create a new ConversationChain object with the ChatHuggingFace object(chat_model) for the 'llm' value and
             the ConversationBufferMemory object for the 'memory' value in the chain.
-        - Using the ConversationChain object, send each message through the predict method 3x. I.e chain.predict(input=message) 
-            Inputting each message object:message, message2 and message3.
+        - Using the ConversationChain object, send each message through the predict method 3x. I.e chain.predict(input=message) Inputting each message object:
+            message, message2 and message3.
         - By using ConversationBufferMemory object's buffer_as_messages variable you can return a list of all messages 
             that transpired within the conversation.
 
