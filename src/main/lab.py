@@ -1,9 +1,12 @@
 import os
 from typing import List
 
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
 from langchain_community.chat_models.huggingface import ChatHuggingFace
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.prompts import HumanMessagePromptTemplate, SystemMessagePromptTemplate, ChatPromptTemplate
 
 llm = HuggingFaceEndpoint(
     endpoint_url=os.environ['LLM_ENDPOINT'],
@@ -30,8 +33,8 @@ def send_single_human_message(message) -> BaseMessage:
     AIMessage object containing the LLM's response.
 
     Instructions:
-    - Create a new HumanMessage object with the message variable provided via the arguments to this function.
-    - Use the HumanMessage object to pass as an argument to ChatHuggingFace object's invoke() method.
+    - Create a new HumanMessage object called 'human_message' with the message variable provided via the arguments to this function.
+    - Pass a list as an argument with the human_message to ChatHuggingFace object's invoke() method. I.e. chat_model.invoke([human_message])
     - Return the response from the invoke method.
     End TODO
     """
